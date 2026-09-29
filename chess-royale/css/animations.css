@@ -1,0 +1,208 @@
+/**
+ * Rörelser
+ * ========
+ *
+ * All rörelse ligger samlad här, av två skäl. Dels blir den lätt att hitta och
+ * justera, dels kan allt stängas av på ett ställe för den som har bett sitt
+ * system om mindre rörelse (se längst ner i filen).
+ *
+ * Regeln vi följer: rörelse ska förklara vad som hände, inte dekorera. Pjäsen
+ * glider för att visa vart den tog vägen, den slagna pjäsen tonar ut för att
+ * visa att den försvann, och menyerna tonar in för att visa att sidan byttes.
+ */
+
+/* ------------------------------------------------------- Byte av skärm */
+
+.screen.is-active {
+  animation: screen-in 260ms ease-out;
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* ---------------------------------------------------------- Pjäsernas drag */
+
+.piece {
+  transition: transform 190ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.piece img {
+  transition: transform 140ms ease-out, filter 140ms ease-out;
+}
+
+/* Den slagna pjäsen krymper och tonar bort. */
+.piece--captured {
+  z-index: 5;
+  pointer-events: none;
+  animation: piece-captured 240ms ease-in forwards;
+}
+
+@keyframes piece-captured {
+  to {
+    opacity: 0;
+    transform: var(--captured-transform, translate(0, 0)) scale(0.6);
+  }
+}
+
+/* Pjäsen som just flyttats får en kort puls, så att draget syns även på en
+   liten skärm där man kanske tittar åt ett annat håll. */
+.square.is-last::before {
+  animation: last-move-in 240ms ease-out;
+}
+
+@keyframes last-move-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Kungen i schack pulserar långsamt tills hotet är avvärjt. */
+.square.is-check::before {
+  animation: check-pulse 1.3s ease-in-out infinite alternate;
+}
+
+@keyframes check-pulse {
+  from {
+    opacity: 0.68;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------ Datorn tänker */
+
+.thinking__dot {
+  animation: thinking-bounce 1s ease-in-out infinite;
+}
+
+.thinking__dot:nth-child(2) {
+  animation-delay: 0.14s;
+}
+
+.thinking__dot:nth-child(3) {
+  animation-delay: 0.28s;
+}
+
+@keyframes thinking-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  30% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------ Överlägg */
+
+.overlay {
+  animation: overlay-in 180ms ease-out;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.promotion,
+.result {
+  animation: card-in 260ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+}
+
+/* Mellanskärmen i tvåspelarläget tonar in något långsammare, eftersom den
+   markerar en paus i spelet snarare än en händelse. */
+.overlay--handover {
+  opacity: 0;
+  transition: opacity 260ms ease-out;
+  animation: none;
+}
+
+.overlay--handover.is-visible {
+  opacity: 1;
+}
+
+.overlay--handover.is-visible .handover__card {
+  animation: card-in 360ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* ------------------------------------------------------ Vinst och knappar */
+
+/* Segerpjäsen på resultatsidan gungar en gång, som en bugning. */
+.result--win .result__piece {
+  animation: victory-bow 900ms cubic-bezier(0.3, 0.8, 0.4, 1);
+}
+
+@keyframes victory-bow {
+  0% {
+    transform: translateY(-18px) scale(0.82);
+    opacity: 0;
+  }
+  55% {
+    transform: translateY(3px) scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Knappar sjunker in något vid tryck. Ger känslan av att något hände direkt,
+   även om resten av gränssnittet behöver en stund. */
+.button,
+.icon-button,
+.menu-button,
+.card,
+.segmented button {
+  transition: transform 90ms ease-out, background-color 140ms ease-out,
+    border-color 140ms ease-out, box-shadow 140ms ease-out, opacity 140ms ease-out;
+}
+
+.button:active:not(:disabled),
+.icon-button:active:not(:disabled),
+.menu-button:active,
+.card:active,
+.promotion__choices button:active {
+  transform: scale(0.975);
+}
+
+.switch span,
+.switch span::after {
+  transition: background-color 160ms ease-out, transform 160ms ease-out;
+}
+
+.switch input:checked + span::after {
+  transform: translateX(21px);
+}
+
+/* ---------------------------------------------------- Mindre rörelse */
+
+/*
+ * Vissa blir yra av rörelse och ställer in sitt system därefter. Då tas all
+ * rörelse bort. Spelet fungerar exakt likadant, pjäserna byter bara plats
+ * direkt i stället för att glida.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

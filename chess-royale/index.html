@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="sv" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101522">
+  <meta name="description" content="Chess Royale – schack mot datorn i tre svårighetsgrader eller mot en vän på samma enhet.">
+  <title>Chess Royale</title>
+
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Marcellus&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/board.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ========================================================== Startsidan -->
+  <section class="screen is-active" data-screen="home">
+    <div class="home__backdrop" aria-hidden="true">
+      <div class="home__grid"></div>
+      <img class="home__ghost home__ghost--left" src="assets/pieces/wN.svg" alt="">
+      <img class="home__ghost home__ghost--right" src="assets/pieces/bQ.svg" alt="">
+    </div>
+
+    <div class="home__content">
+      <header class="home__brand">
+        <img class="home__logo" src="assets/icons/logo.svg" alt="" width="72" height="72">
+        <h1 class="home__title">Chess<span>Royale</span></h1>
+        <p class="home__tagline">Schack mot datorn eller mot en vän</p>
+      </header>
+
+      <nav class="home__menu">
+        <button class="menu-button" data-action="play-computer">
+          <span class="menu-button__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>
+              <circle cx="9.5" cy="10" r="1.2" fill="currentColor" stroke="none"/>
+              <circle cx="14.5" cy="10" r="1.2" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+          <span class="menu-button__text">
+            <strong>Spela mot datorn</strong>
+            <small>Tre svårighetsgrader</small>
+          </span>
+        </button>
+
+        <button class="menu-button" data-action="play-local">
+          <span class="menu-button__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8.5" cy="8" r="3.2"/><circle cx="16.5" cy="8" r="3.2"/>
+              <path d="M2.8 19.5c.6-3.2 2.8-4.8 5.7-4.8s5.1 1.6 5.7 4.8M14 14.9c2.6.2 4.6 1.8 5.2 4.6"/>
+            </svg>
+          </span>
+          <span class="menu-button__text">
+            <strong>Spela två spelare</strong>
+            <small>På samma mobil eller dator</small>
+          </span>
+        </button>
+
+        <button class="menu-button menu-button--quiet" data-action="open-settings">
+          <span class="menu-button__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3.2"/>
+              <path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5"/>
+            </svg>
+          </span>
+          <span class="menu-button__text">
+            <strong>Inställningar</strong>
+            <small>Tema, ljud och bräde</small>
+          </span>
+        </button>
+      </nav>
+
+      <dl class="stats" aria-label="Din statistik">
+        <div class="stats__item"><dt>Spelade</dt><dd data-stat="played">0</dd></div>
+        <div class="stats__item"><dt>Vunna</dt><dd data-stat="won">0</dd></div>
+        <div class="stats__item"><dt>Remi</dt><dd data-stat="drawn">0</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ==================================================== Inför ett parti -->
+  <section class="screen" data-screen="setup">
+    <header class="topbar">
+      <button class="icon-button" data-action="go-home" aria-label="Tillbaka till menyn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <h2 class="topbar__title" data-setup-title>Spela mot datorn</h2>
+      <span class="topbar__spacer"></span>
+    </header>
+
+    <div class="screen__body">
+      <section class="field" data-setup-section="difficulty">
+        <h3 class="field__label">Svårighetsgrad</h3>
+        <div class="cards" role="radiogroup" aria-label="Svårighetsgrad">
+          <button class="card" role="radio" data-choice="difficulty" data-value="easy" aria-checked="false">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 17h4M4 12h4"/><circle cx="16" cy="12" r="4.5"/></svg>
+            </span>
+            <span class="card__body">
+              <strong>Enkel</strong>
+              <small>Räknar två drag framåt och missar en del. Bra att börja med.</small>
+            </span>
+          </button>
+          <button class="card" role="radio" data-choice="difficulty" data-value="medium" aria-checked="true">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 18h3M4 13h3M4 8h3"/><circle cx="16" cy="12" r="5.5"/></svg>
+            </span>
+            <span class="card__body">
+              <strong>Medel</strong>
+              <small>Räknar tre drag framåt, slår tillbaka och undviker enkla misstag.</small>
+            </span>
+          </button>
+          <button class="card" role="radio" data-choice="difficulty" data-value="hard" aria-checked="false">
+            <span class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 19h2.5M4 14.5h2.5M4 10h2.5M4 5.5h2.5"/><circle cx="16" cy="12" r="6.5"/></svg>
+            </span>
+            <span class="card__body">
+              <strong>Svår</strong>
+              <small>Söker så djupt den hinner på tre sekunder och ser taktik flera drag fram.</small>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <section class="field" data-setup-section="color">
+        <h3 class="field__label">Din färg</h3>
+        <div class="segmented" role="radiogroup" aria-label="Din färg">
+          <button role="radio" data-choice="color" data-value="w" aria-checked="true">Vit</button>
+          <button role="radio" data-choice="color" data-value="b" aria-checked="false">Svart</button>
+          <button role="radio" data-choice="color" data-value="random" aria-checked="false">Slumpa</button>
+        </div>
+      </section>
+
+      <section class="field">
+        <h3 class="field__label">Betänketid</h3>
+        <div class="segmented" role="radiogroup" aria-label="Betänketid">
+          <button role="radio" data-choice="minutes" data-value="0" aria-checked="true">Ingen</button>
+          <button role="radio" data-choice="minutes" data-value="5" aria-checked="false">5 min</button>
+          <button role="radio" data-choice="minutes" data-value="10" aria-checked="false">10 min</button>
+          <button role="radio" data-choice="minutes" data-value="15" aria-checked="false">15 min</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="screen__footer">
+      <button class="button button--primary" data-action="start-game">Starta partiet</button>
+    </footer>
+  </section>
+
+  <!-- ============================================================= Partiet -->
+  <section class="screen screen--game" data-screen="game">
+    <header class="topbar">
+      <button class="icon-button" data-action="leave-game" aria-label="Avsluta partiet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <h2 class="topbar__title" data-game-title>Parti</h2>
+      <button class="icon-button" data-action="undo" aria-label="Ångra senaste draget">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h11a5 5 0 0 1 0 10h-6"/><path d="M8 5 4 9l4 4"/></svg>
+      </button>
+      <button class="icon-button" data-action="restart" aria-label="Börja om partiet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4.5h-4.5"/></svg>
+      </button>
+    </header>
+
+    <div class="game">
+      <div class="game__main">
+        <article class="player" data-player="top">
+          <img class="player__piece" alt="" width="34" height="34">
+          <div class="player__info">
+            <span class="player__name"></span>
+            <span class="player__meta"></span>
+          </div>
+          <time class="player__clock" hidden>--:--</time>
+        </article>
+
+        <div class="board-frame">
+          <div id="board"></div>
+          <div class="thinking" hidden>
+            <span class="thinking__dot"></span>
+            <span class="thinking__dot"></span>
+            <span class="thinking__dot"></span>
+            <span class="thinking__label">Datorn tänker</span>
+          </div>
+        </div>
+
+        <article class="player" data-player="bottom">
+          <img class="player__piece" alt="" width="34" height="34">
+          <div class="player__info">
+            <span class="player__name"></span>
+            <span class="player__meta"></span>
+          </div>
+          <time class="player__clock" hidden>--:--</time>
+        </article>
+
+        <p class="status" data-status role="status" aria-live="polite"></p>
+      </div>
+
+      <details class="panel" open>
+        <summary class="panel__summary">Partiinformation</summary>
+        <div class="panel__content">
+          <dl class="panel__facts">
+            <div><dt>Vit</dt><dd data-fact="white">–</dd></div>
+            <div><dt>Svart</dt><dd data-fact="black">–</dd></div>
+            <div><dt>Läge</dt><dd data-fact="mode">–</dd></div>
+          </dl>
+          <h3 class="panel__heading">Drag</h3>
+          <ol class="moves" data-moves></ol>
+          <div class="panel__actions">
+            <button class="button button--ghost" data-action="undo">Ångra drag</button>
+            <button class="button button--ghost" data-action="restart">Nytt parti</button>
+            <button class="button button--ghost" data-action="leave-game">Till menyn</button>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ======================================================= Inställningar -->
+  <section class="screen" data-screen="settings">
+    <header class="topbar">
+      <button class="icon-button" data-action="go-home" aria-label="Tillbaka till menyn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <h2 class="topbar__title">Inställningar</h2>
+      <span class="topbar__spacer"></span>
+    </header>
+
+    <div class="screen__body">
+      <label class="row">
+        <span class="row__text"><strong>Mörkt tema</strong><small>Stäng av för ett ljust utseende</small></span>
+        <span class="switch"><input type="checkbox" data-setting="theme"><span></span></span>
+      </label>
+
+      <label class="row">
+        <span class="row__text"><strong>Ljud</strong><small>Effekter vid drag, slag och schack</small></span>
+        <span class="switch"><input type="checkbox" data-setting="sound"><span></span></span>
+      </label>
+
+      <label class="row">
+        <span class="row__text"><strong>Visa möjliga drag</strong><small>Markera rutor pjäsen kan gå till</small></span>
+        <span class="switch"><input type="checkbox" data-setting="showLegalMoves"><span></span></span>
+      </label>
+
+      <label class="row">
+        <span class="row__text"><strong>Vänd brädet som svart</strong><small>Egna pjäser hamnar närmast dig</small></span>
+        <span class="switch"><input type="checkbox" data-setting="flipWhenBlack"><span></span></span>
+      </label>
+
+      <label class="row">
+        <span class="row__text"><strong>Mellanskärm vid turbyte</strong><small>Visas i tvåspelarläget vid överlämning</small></span>
+        <span class="switch"><input type="checkbox" data-setting="handoverScreen"><span></span></span>
+      </label>
+
+      <section class="field">
+        <h3 class="field__label">Standardtid för nya partier</h3>
+        <div class="segmented" role="radiogroup" aria-label="Standardtid">
+          <button role="radio" data-setting-choice="defaultMinutes" data-value="0" aria-checked="true">Ingen</button>
+          <button role="radio" data-setting-choice="defaultMinutes" data-value="5" aria-checked="false">5 min</button>
+          <button role="radio" data-setting-choice="defaultMinutes" data-value="10" aria-checked="false">10 min</button>
+          <button role="radio" data-setting-choice="defaultMinutes" data-value="15" aria-checked="false">15 min</button>
+        </div>
+      </section>
+
+      <div class="panel__actions panel__actions--column">
+        <button class="button button--ghost" data-action="reset-settings">Återställ inställningar</button>
+        <button class="button button--ghost" data-action="reset-stats">Nollställ statistik</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ========================================================== Överlägg -->
+
+<!-- Val av pjäs vid bondeförvandling -->
+<div class="overlay" data-overlay="promotion" hidden>
+  <div class="promotion" role="dialog" aria-modal="true" aria-label="Välj pjäs">
+    <p class="promotion__title">Välj pjäs</p>
+    <div class="promotion__choices"></div>
+  </div>
+</div>
+
+<!-- Mellanskärm mellan turerna i tvåspelarläget -->
+<div class="overlay overlay--handover" data-overlay="handover" tabindex="-1" hidden></div>
+
+<!-- Resultatet när partiet är slut -->
+<div class="overlay" data-overlay="result" hidden>
+  <div class="result" role="dialog" aria-modal="true" aria-labelledby="result-title">
+    <img class="result__piece" alt="" width="64" height="64">
+    <h2 class="result__title" id="result-title"></h2>
+    <p class="result__reason"></p>
+    <dl class="result__facts">
+      <div><dt>Drag</dt><dd data-result="moves">0</dd></div>
+      <div><dt>Speltid</dt><dd data-result="time">0:00</dd></div>
+    </dl>
+    <div class="result__actions">
+      <button class="button button--primary" data-action="rematch">Spela igen</button>
+      <button class="button button--ghost" data-action="new-setup">Nytt parti</button>
+      <button class="button button--ghost" data-action="go-home">Till menyn</button>
+    </div>
+  </div>
+</div>
+
+<!-- Visas bara om sidan öppnas direkt från hårddisken, se README -->
+<div id="file-warning" hidden>
+  <div class="filewarn__card">
+    <h2>Starta spelet via en lokal server</h2>
+    <p>
+      Sidan öppnades direkt från hårddisken. Webbläsaren tillåter då inte att
+      spelets moduler läses in, av säkerhetsskäl.
+    </p>
+    <p>
+      Öppna mappen i Visual Studio Code, installera tillägget
+      <strong>Live Server</strong>, högerklicka på <code>index.html</code> och
+      välj <strong>Open with Live Server</strong>.
+    </p>
+  </div>
+</div>
+
+<noscript>
+  <p style="padding:24px;color:#F5F5F5;font-family:sans-serif">
+    Chess Royale behöver JavaScript för att fungera. Slå på det i webbläsarens inställningar.
+  </p>
+</noscript>
+
+<!-- Vanligt skript, inte en modul, så att det körs även när modulerna blockeras. -->
+<script>
+  if (location.protocol === 'file:') {
+    document.getElementById('file-warning').hidden = false;
+    document.getElementById('app').hidden = true;
+  }
+</script>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

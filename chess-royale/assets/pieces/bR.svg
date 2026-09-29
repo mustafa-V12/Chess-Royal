@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="45" height="45" role="img" aria-label="Svart torn">
+  <title>Svart torn</title>
+  <g style="--eye:#DCE2EF" fill="#2C3346" stroke="#0A0D16" stroke-width="1.5" stroke-linejoin="round">
+
+  <path d="M11.4 7.8h4.6v3.2h4V7.8h4.9v3.2h4V7.8h4.7v7.4H11.4z"/>
+  <path d="M13.6 15.2h17.8l-1.4 3.4H15z"/>
+  <path d="M15 18.6h15l1.6 11H13.4z"/>
+  <rect x="12.4" y="29.6" width="20.2" height="3.6" rx="1.8"/>
+  
+  <path d="M12.5 33.2h20l2.6 4.6H9.9z"/>
+  <rect x="8.6" y="37.8" width="27.8" height="3.8" rx="1.9"/>
+  </g>
+</svg>

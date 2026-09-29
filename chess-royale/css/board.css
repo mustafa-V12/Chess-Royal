@@ -1,0 +1,223 @@
+/**
+ * Schackbrädet
+ * ============
+ *
+ * Brädet byggs av tre lager som ligger exakt ovanpå varandra:
+ *
+ *   .board__squares   64 rutor i ett rutnät. Bär markeringar och koordinater.
+ *   .board__pieces    pjäserna, absolut placerade och flyttade med transform.
+ *
+ * Anledningen till att pjäserna ligger i ett eget lager är att de då kan flyttas
+ * fritt över rutorna. Ligger de inuti en ruta måste de tas bort och sättas in på
+ * nytt vid varje drag, och då går det inte att animera förflyttningen.
+ */
+
+.board-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+/*
+ * Brädet är alltid kvadratiskt.
+ *
+ * På en mobil i stående läge ska det fylla bredden, och sidan får rulla om det
+ * behövs. I liggande läge finns det gott om bredd men lite höjd, och då är det
+ * höjden som sätter gränsen. Därav min(100%, 72vh).
+ */
+.board {
+  position: relative;
+  width: min(100%, 72vh);
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  touch-action: none;
+}
+
+.board__squares,
+.board__pieces {
+  position: absolute;
+  inset: 0;
+}
+
+.board__squares {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.board__pieces {
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- Rutorna */
+
+.square {
+  position: relative;
+}
+
+.square--light {
+  background: var(--square-light);
+}
+
+.square--dark {
+  background: var(--square-dark);
+}
+
+/* Senaste draget: en dämpad guldton över både start- och slutrutan. */
+.square.is-last::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--accent) 42%, transparent);
+}
+
+/* Den valda pjäsens ruta. */
+.square.is-selected::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--accent) 58%, transparent);
+}
+
+/* Möjligt drag till en tom ruta: en prick i mitten. */
+.square.is-target::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30%;
+  height: 30%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(26, 32, 48, 0.32);
+}
+
+/* Möjligt slag: en ring runt rutan i stället för en prick, så att pjäsen syns. */
+.square.is-capture::after {
+  content: '';
+  position: absolute;
+  inset: 4%;
+  border: 6px solid rgba(26, 32, 48, 0.3);
+  border-radius: 50%;
+}
+
+/* Kungen står i schack. */
+.square.is-check::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--danger) 88%, transparent) 14%,
+    color-mix(in srgb, var(--danger) 30%, transparent) 62%,
+    transparent 74%
+  );
+}
+
+/* --------------------------------------------------------------- Pjäserna */
+
+.piece {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12.5%;
+  height: 12.5%;
+  display: grid;
+  place-items: center;
+  will-change: transform;
+}
+
+.piece img {
+  width: 92%;
+  height: 92%;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+}
+
+/* Pjäsen som dras följer fingret och ska ligga över allt annat. */
+.piece--dragging {
+  z-index: 30;
+  transition: none;
+}
+
+.piece--dragging img {
+  transform: scale(1.14);
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.5));
+}
+
+/* Brädet är låst medan datorn tänker eller mellan turerna. */
+.board--locked {
+  cursor: default;
+}
+
+/* ----------------------------------------------------------- Koordinater */
+
+/*
+ * Bokstäverna och siffrorna ritas inuti kantrutorna i stället för i ett eget
+ * lager. Då kan färgen följa rutans färg, och de syns lika bra på ljusa som
+ * på mörka rutor utan genomskinliga knep.
+ */
+.square__coord {
+  position: absolute;
+  font-size: clamp(7px, 1.7vw, 10px);
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.square__coord--rank {
+  top: 3px;
+  left: 3px;
+}
+
+.square__coord--file {
+  right: 3px;
+  bottom: 3px;
+}
+
+.square--light .square__coord {
+  color: rgba(104, 122, 114, 0.95);
+}
+
+.square--dark .square__coord {
+  color: rgba(238, 226, 205, 0.9);
+}
+
+/* ------------------------------------------------- Datorn tänker-markering */
+
+.thinking {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  font-size: 13px;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+.thinking[hidden] {
+  display: none;
+}
+
+.thinking__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.thinking__label {
+  margin-left: 2px;
+}

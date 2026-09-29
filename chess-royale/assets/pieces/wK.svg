@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45" width="45" height="45" role="img" aria-label="Vit kung">
+  <title>Vit kung</title>
+  <g style="--eye:#2A2F3E" fill="#F6F1E4" stroke="#2A2F3E" stroke-width="1.5" stroke-linejoin="round">
+
+  <path d="M21.1 3h2.8v3.2h3.2V9h-3.2v3.2h-2.8V9h-3.2V6.2h3.2z"/>
+  <path d="M22.5 12.6c4.9 0 8.9 3.9 8.9 8.7 0 1.6-.4 3-1.2 4.2H14.8c-.8-1.2-1.2-2.6-1.2-4.2 0-4.8 4-8.7 8.9-8.7z"/>
+  <path d="M15.4 20.4h14.2" stroke="var(--eye)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <path d="M14.8 25.5h15.4c1.8 1.6 3.1 3.4 3.7 5.1H11.1c.6-1.7 1.9-3.5 3.7-5.1z"/>
+  <rect x="10.6" y="30.6" width="23.8" height="3.4" rx="1.7"/>
+  <path d="M11.9 33.8h21.2l2.4 4H9.5z"/>
+  <rect x="7.6" y="37.8" width="29.8" height="3.8" rx="1.9"/>
+  </g>
+</svg>
